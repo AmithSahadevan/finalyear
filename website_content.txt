@@ -1,0 +1,111 @@
+WEBSITE CONTENT - VOCA AI INTERVIEWING PLATFORM
+
+---
+
+[NAVBAR]
+Logo: Voca
+Links:
+- Philosophy
+- Features
+- How It Works
+- Pricing
+- FAQ
+CTA Button: Get Started
+
+---
+
+[HERO SECTION]
+Tagline: Intelligent Interviewing
+Main Heading: The new standard for candidate evaluation.
+Description: Voca is an autonomous interviewing engine that helps companies screen thousands of candidates with human-level nuance and infinite scale. Also available for internal training.
+Buttons:
+- Automate Hiring
+- For Training
+
+---
+
+[PHILOSOPHY SECTION]
+Heading: Hiring shouldn't be a guessing game.
+Description: Traditional interviews are unscalable, biased, and inconsistent. Voca standardizes the process, ensuring every candidate is evaluated on their actual ability to communicate and problem-solve, not just their resume.
+
+---
+
+[HOW IT WORKS SECTION]
+Heading: How It Works
+Subheading: A unified platform for improvement.
+Steps:
+1. Create Assessment
+   - "Select from our role library or build custom scenarios to test specific soft skills and technical knowledge."
+2. Autonomous Screening
+   - "Candidates interview with our AI voice agent, which adapts follow-up questions in real-time."
+3. Data-Driven Shortlist
+   - "Receive instant, bias-free scores and transcripts to identify top performers 10x faster."
+
+---
+
+[FEATURES SECTION]
+Heading: Built for Modern Recruiting
+Subheading: Platform Capabilities
+Features List:
+1. Autonomous Interviews
+   - "Conduct thousands of first-round screens simultaneously without scheduling conflicts."
+2. Bias-Free Evaluation
+   - "Standardize scoring criteria to eliminate unconscious bias and judge solely on performance."
+3. Deep Behavioral Insight
+   - "Go beyond keywords. Our AI analyzes improved problem-solving and communication clarity."
+4. Training Mode
+   - "Use the same engine to upskill your existing workforce with private, safe practice environments."
+
+---
+
+[ABOUT SECTION]
+Heading: Unlocking Human Potential
+Description:
+- "Voca is dedicated to removing bias and inefficiency from the hiring process. By using AI to conduct standardized, high-quality interviews, we help companies find hidden talent that traditional resumes miss."
+- "We also believe in transparency. That's why the same technology used to assess candidates is available to help them practice and improve."
+
+---
+
+[PRICING SECTION]
+Heading: Plans for Scale
+Subheading: Simple pricing for teams of all sizes.
+Plans:
+1. Individual (₹10/month) [Highlighted]
+   - "For candidates practicing for their next role."
+   - Features: Review Voca Assessments, 3 Mock Interviews / Mo, Personal Speech Insights
+2. Institution (₹2999/month)
+   - "For Institutions for training Students"
+   - Features: 100 AI Interviews / Mo, Custom Role Builder, Auto-Scheduling, Basic ATS Integration
+3. Organization (Contact Sales)
+   - "For global teams requiring scale."
+   - Features: Unlimited Screens, Advanced Bias Protection, Custom LLM Fine-tuning, Dedicated CSM, SSO & Compliance
+
+---
+
+[FAQ SECTION]
+Heading: Common Questions
+Q&A:
+Q: Can Voca conduct interviews for us?
+A: Yes. For Enterprise clients, Voca acts as an autonomous interviewer, conducting first-round screening to evaluate thousands of candidates on communication and behavioral fit.
+
+Q: Is there an API for integration?
+A: Yes, our Enterprise plan includes API access, allowing you to integrate Voca's analysis engine directly into your ATS, LMS, or HR platforms.
+
+Q: Do you offer discounts for universities?
+A: We offer special pricing for educational institutions. Our Institution plan is designed to be affordable and scalable for large student bodies.
+
+Q: What if the limit reaches before one month?
+A: No problem! You can always renew your plan to continue using Voca.
+
+---
+
+[CTA SECTION]
+Heading: Hire the best. Without the burnout.
+Button: Start Free Trial
+
+---
+
+[FOOTER]
+Logo: Voca.
+Copyright: © 2026 Voca AI. All rights reserved.
+Links: Privacy, Terms, Contact

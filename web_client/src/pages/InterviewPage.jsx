@@ -90,14 +90,14 @@ const InterviewPage = () => {
                         break;
 
                     case 'transcript':
-                         if (data.text) {
+                        if (data.text) {
                             // Only update if text is meaningful
                             if (data.text.trim().length > 0) {
                                 setTranscript(data.text);
                             }
-                         }
-                         break;
-                    
+                        }
+                        break;
+
                     case 'text':
                         if (data.ai_text) {
                             setAiMessage(data.ai_text);
@@ -219,7 +219,7 @@ const InterviewPage = () => {
     const startAudioCapture = useCallback(async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            
+
             // Close existing context if any
             if (audioContextRef.current) {
                 audioContextRef.current.close();
@@ -234,11 +234,11 @@ const InterviewPage = () => {
             console.log("Audio Sample Rate:", actualSampleRate);
 
             const source = context.createMediaStreamSource(stream);
-            
+
             // Use ScriptProcessor for raw PCM access
             // Buffer size 4096, 1 input channel, 1 output channel
             const processor = context.createScriptProcessor(4096, 1, 1);
-            
+
             source.connect(processor);
             processor.connect(context.destination);
 
@@ -249,7 +249,7 @@ const InterviewPage = () => {
             processor.onaudioprocess = (e) => {
                 const inputData = e.inputBuffer.getChannelData(0);
                 audioBuffer.push(...inputData);
-                
+
                 // Calculate simple volume for visualization (Average Amplitude)
                 let sum = 0;
                 for (let i = 0; i < inputData.length; i++) {
@@ -259,10 +259,10 @@ const InterviewPage = () => {
                 setAudioLevel(Math.min(100, avg * 500)); // Amplify for visibility
 
                 if (audioBuffer.length >= BUFFER_SIZE) {
-                     // console.log("Sending Audio Chunk:", audioBuffer.length); // DEBUG
+                    // console.log("Sending Audio Chunk:", audioBuffer.length); // DEBUG
                     sendAudioChunk(new Float32Array(audioBuffer), actualSampleRate);
                     // Keep overlap? No, clear mostly.
-                    audioBuffer = []; 
+                    audioBuffer = [];
                 }
             };
 
@@ -309,7 +309,7 @@ const InterviewPage = () => {
                     binary += String.fromCharCode(bytes[i]);
                 }
                 const base64Audio = btoa(binary);
-                
+
                 if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
                     wsRef.current.send(JSON.stringify({
                         type: 'audio_chunk',
@@ -318,7 +318,7 @@ const InterviewPage = () => {
                     }));
                 }
             };
-            
+
             // Store reference for cleanup (mocking MediaRecorder interface for compatibility)
             mediaRecorderRef.current = {
                 stop: () => {
@@ -385,10 +385,10 @@ const InterviewPage = () => {
         if (mediaRecorderRef.current) {
             if (mediaRecorderRef.current._interval) clearInterval(mediaRecorderRef.current._interval);
             if (mediaRecorderRef.current.state && mediaRecorderRef.current.state !== 'inactive') {
-                 mediaRecorderRef.current.stop();
+                mediaRecorderRef.current.stop();
             }
         }
-        
+
         // Close AudioContext if active
         if (audioContextRef.current) {
             audioContextRef.current.close().catch(e => console.error(e));
@@ -464,11 +464,11 @@ const InterviewPage = () => {
                                 <div style={{ width: 50, height: 2, background: 'white' }}></div>
                             </div>
                             <div className="listening-indicator">
-                                <div className="bar" style={{height: `${10 + audioLevel}%`, transition: 'height 0.1s', animation: 'none'}}></div>
-                                <div className="bar" style={{height: `${10 + audioLevel * 1.5}%`, transition: 'height 0.1s', animation: 'none'}}></div>
-                                <div className="bar" style={{height: `${10 + audioLevel * 2}%`, transition: 'height 0.1s', animation: 'none'}}></div>
-                                <div className="bar" style={{height: `${10 + audioLevel * 1.5}%`, transition: 'height 0.1s', animation: 'none'}}></div>
-                                <div className="bar" style={{height: `${10 + audioLevel}%`, transition: 'height 0.1s', animation: 'none'}}></div>
+                                <div className="bar" style={{ height: `${10 + audioLevel}%`, transition: 'height 0.1s', animation: 'none' }}></div>
+                                <div className="bar" style={{ height: `${10 + audioLevel * 1.5}%`, transition: 'height 0.1s', animation: 'none' }}></div>
+                                <div className="bar" style={{ height: `${10 + audioLevel * 2}%`, transition: 'height 0.1s', animation: 'none' }}></div>
+                                <div className="bar" style={{ height: `${10 + audioLevel * 1.5}%`, transition: 'height 0.1s', animation: 'none' }}></div>
+                                <div className="bar" style={{ height: `${10 + audioLevel}%`, transition: 'height 0.1s', animation: 'none' }}></div>
                             </div>
                             <div style={{ marginTop: 20, color: '#888', fontSize: '0.9rem', textAlign: 'center', padding: '0 40px' }}>
                                 {aiMessage}

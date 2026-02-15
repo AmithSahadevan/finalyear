@@ -1,7 +1,5 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
-import { CanvasRevealEffect } from './ui/canvas-reveal-effect';
 
 const plans = [
     {
@@ -31,8 +29,6 @@ const plans = [
 ];
 
 const PricingCard = ({ plan, index }: { plan: typeof plans[0], index: number }) => {
-    const [hovered, setHovered] = useState(false);
-
     return (
         <motion.div
             key={plan.name}
@@ -40,32 +36,10 @@ const PricingCard = ({ plan, index }: { plan: typeof plans[0], index: number }) 
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            className={`relative p-8 rounded-3xl border ${plan.highlight ? 'bg-white/5 border-primary-900/50' : 'glass-panel border-white/5'} flex flex-col group`}
+            className={`relative p-8 rounded-3xl border ${plan.highlight ? 'bg-white/5 border-emerald-500/50 shadow-[0_0_30px_-10px_rgba(16,185,129,0.2)]' : 'glass-panel border-white/5'} flex flex-col group backdrop-blur-md`}
         >
-             <AnimatePresence>
-                {hovered && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.5, ease: "easeInOut" }}
-                        className="absolute inset-0 z-0 overflow-hidden rounded-3xl"
-                    >
-                        <CanvasRevealEffect
-                            animationSpeed={3}
-                            containerClassName="bg-transparent"
-                            colors={[[46, 127, 85], [107, 185, 127]]}
-                            opacities={[0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.4, 0.4, 0.4, 1]}
-                            dotSize={2}
-                        />
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
             {plan.highlight && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary-900 text-primary-100 px-4 py-1 rounded-full text-xs uppercase tracking-wide border border-primary-700 z-20">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-4 py-1 rounded-full text-xs uppercase tracking-wide border border-emerald-500 z-20 shadow-lg">
                     Available
                 </div>
             )}
@@ -83,14 +57,14 @@ const PricingCard = ({ plan, index }: { plan: typeof plans[0], index: number }) 
                 <ul className="space-y-4 mb-8 flex-1">
                     {plan.features.map((feature, i) => (
                         <li key={i} className="flex items-start text-sm text-gray-300">
-                            <Check className="w-4 h-4 text-primary-400 mr-3 mt-0.5" />
+                            <Check className="w-4 h-4 text-emerald-400 mr-3 mt-0.5" />
                             <span className="flex-1">{feature}</span>
                         </li>
                     ))}
                 </ul>
 
-                <button className={`w-full py-3 rounded-xl font-medium transition-all ${plan.highlight ? 'bg-white text-black hover:bg-gray-200' : 'bg-white/10 text-white hover:bg-white/20'}`}>
-                    {plan.name === 'Enterprise' ? 'Contact Sales' : `Get ${plan.name}`}
+                <button className={`w-full py-3 rounded-xl font-medium transition-all ${plan.highlight ? 'bg-emerald-500 text-black hover:bg-emerald-400' : 'bg-white/10 text-white hover:bg-white/20'}`}>
+                    {plan.name === 'Organization' ? 'Contact Sales' : `Get ${plan.name}`}
                 </button>
             </div>
         </motion.div>
@@ -100,9 +74,6 @@ const PricingCard = ({ plan, index }: { plan: typeof plans[0], index: number }) 
 const Pricing = () => {
     return (
         <section id="pricing" className="py-24 relative">
-            {/* Background accent */}
-            <div className="absolute bottom-[20%] right-[10%] w-[30%] h-[30%] bg-primary-900/10 rounded-full blur-[100px] pointer-events-none" />
-
             <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-serif text-white mb-4">Plans for Scale</h2>

@@ -19,20 +19,20 @@ const faqs = [
         question: "What if the limit reaches before one month?",
         answer: "No problem! You can always renew your plan to continue using Voca."
     }
-    
+
 ];
 
 const FAQItem = ({ question, answer }: { question: string, answer: string }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="border-b border-white/5">
+        <div className="border-b border-emerald-500/10 last:border-0 hover:bg-white/5 transition-colors rounded-lg px-4">
             <button
                 className="w-full py-6 flex justify-between items-center text-left focus:outline-none"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <span className="text-lg text-white font-medium pr-8">{question}</span>
-                <span className="text-white/50">
+                <span className={`text-emerald-400/70 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
                     {isOpen ? <Minus size={20} /> : <Plus size={20} />}
                 </span>
             </button>
@@ -59,7 +59,7 @@ const FAQ = () => {
     return (
         <section className="py-24 max-w-3xl mx-auto px-6">
             <h2 className="text-3xl font-serif text-white mb-12 text-center">Common Questions</h2>
-            <div className="space-y-2">
+            <div className="space-y-2 glass-panel p-2 rounded-2xl bg-white/5 border border-white/5">
                 {faqs.map((faq, index) => (
                     <FAQItem key={index} {...faq} />
                 ))}

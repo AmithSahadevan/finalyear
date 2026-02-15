@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 const CTA = () => {
     return (
         <section className="py-32 flex items-center justify-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-bg-800/50 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-bg-800/80 pointer-events-none" />
 
             <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
                 <motion.h2
@@ -13,7 +13,7 @@ const CTA = () => {
                     viewport={{ once: true }}
                 >
                     Hire the best. <br />
-                    <span className="text-white/50">Without the burnout.</span>
+                    <span className="text-emerald-500/80">Without the burnout.</span>
                 </motion.h2>
 
                 <motion.div
@@ -22,7 +22,7 @@ const CTA = () => {
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 }}
                 >
-                    <button className="px-10 py-4 rounded-full bg-white text-black font-medium text-lg hover:bg-gray-200 transition-all transform hover:scale-105 shadow-xl shadow-white/5">
+                    <button className="px-10 py-4 rounded-full bg-white text-black font-medium text-lg hover:bg-emerald-50 transition-all transform hover:scale-105 shadow-[0_0_30px_-5px_rgba(255,255,255,0.3)]">
                         Start Free Trial
                     </button>
                 </motion.div>

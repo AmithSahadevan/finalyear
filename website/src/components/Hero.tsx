@@ -1,121 +1,104 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
-import { NoiseBackground } from './ui/noise-background';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mic, Activity, ArrowRight } from 'lucide-react';
 
 const Hero = () => {
-    const containerRef = useRef<HTMLElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end start"]
-    });
+    const [activeStatus, setActiveStatus] = useState("Listening");
 
-    const scale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
-    const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
+    useEffect(() => {
+        const statuses = ["Listening", "Analyzing", "Evaluating"];
+        let index = 0;
+        const interval = setInterval(() => {
+            index = (index + 1) % statuses.length;
+            setActiveStatus(statuses[index]);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
 
     return (
-        <motion.section
-            ref={containerRef}
-            style={{ scale, opacity }}
-            className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden"
-        >
-            {/* Abstract Background */}
-            <div className="absolute inset-0 pointer-events-none">
-                <motion.div
-                    animate={{
-                        scale: [1, 1.1, 1],
-                        rotate: [0, 5, -5, 0],
-                        x: [0, 10, -10, 0],
-                        y: [0, 15, -15, 0],
-                    }}
-                    transition={{
-                        duration: 15,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                    }}
-                    className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-emerald-500/20 rounded-full blur-[120px]"
-                />
-                <motion.div
-                    animate={{
-                        scale: [1, 1.2, 1],
-                        x: [0, 20, -20, 0],
-                        y: [0, -20, 20, 0]
-                    }}
-                    transition={{
-                        duration: 18,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: 1
-                    }}
-                    className="absolute top-[10%] right-[0%] w-[40%] h-[40%] bg-primary-400/20 rounded-full blur-[100px] mix-blend-screen"
-                />
-                <motion.div
-                    animate={{
-                        scale: [1, 1.15, 1],
-                        rotate: [0, -10, 10, 0],
-                        x: [0, -15, 15, 0],
-                        y: [0, 10, -10, 0],
-                    }}
-                    transition={{
-                        duration: 20,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: 2
-                    }}
-                    className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-primary-900/40 rounded-full blur-[120px]"
-                />
-            </div>
-
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
             <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                >
-                    <span className="inline-block px-4 py-1.5 mb-8 rounded-full border border-white/10 bg-white/5 text-xs tracking-widest text-primary-100 uppercase">
-                        Intelligent Interviewing
-                    </span>
 
+                {/* AI Status Indicator */}
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="flex flex-col items-center mb-12"
+                >
+                    <div className="relative flex items-center justify-center mb-4">
+                        <div className="absolute inset-0 bg-emerald-500/20 rounded-full blur-xl animate-pulse" />
+                        <div className="w-16 h-16 rounded-full bg-black/40 border border-emerald-500/30 flex items-center justify-center backdrop-blur-md relative z-10">
+                            <Mic className="w-6 h-6 text-emerald-400" />
+                        </div>
+                        {/* Audio Waveform Effect */}
+                        {[1, 2, 3].map((i) => (
+                            <motion.div
+                                key={i}
+                                className="absolute inset-0 border border-emerald-500/10 rounded-full"
+                                animate={{ scale: [1, 1.5 + i * 0.2, 1], opacity: [0.5, 0, 0.5] }}
+                                transition={{ duration: 2 + i * 0.5, repeat: Infinity, ease: "easeInOut" }}
+                            />
+                        ))}
+                    </div>
+
+                    <div className="h-8 flex items-center justify-center overflow-hidden relative">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeStatus}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.3 }}
+                                className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/20 border border-emerald-500/20 text-emerald-400 text-xs font-mono tracking-wider uppercase"
+                            >
+                                <Activity className="w-3 h-3 animate-pulse" />
+                                <span>{activeStatus}</span>
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+                </motion.div>
+
+                {/* Main Content */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                >
                     <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white tracking-tight leading-[1.1] mb-8">
                         The new standard for <br />
-                        <span className="text-text-muted">candidate evaluation.</span>
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 to-emerald-500">
+                            candidate evaluation.
+                        </span>
                     </h1>
 
                     <p className="text-xl text-text-muted max-w-2xl mx-auto mb-12 font-light leading-relaxed">
                         Voca is an autonomous interviewing engine that helps companies screen thousands of candidates with human-level nuance and infinite scale. Also available for internal training.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                        <button className="px-8 py-3.5 rounded-full bg-white text-black font-medium text-lg hover:bg-gray-200 transition-all transform hover:scale-105">
-                            Automate Hiring
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <button className="px-8 py-3.5 rounded-full bg-emerald-500 text-black font-medium text-lg hover:bg-emerald-400 transition-all shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.6)] flex items-center gap-2">
+                            Automate Hiring <ArrowRight className="w-4 h-4" />
                         </button>
 
-                        <NoiseBackground
-                            containerClassName="w-fit p-1.5 rounded-full"
-                            gradientColors={[
-                                "#064e3b", // emerald-900
-                                "#10b981", // emerald-500
-                                "#34d399", // emerald-400
-                            ]}
-                        >
-                            <button className="h-full w-full cursor-pointer rounded-full bg-zinc-950 px-8 py-3 text-white border border-white/10 shadow-lg hover:bg-zinc-900 transition-all font-medium text-lg">
-                                For Training
-                            </button>
-                        </NoiseBackground>
+                        <button className="px-8 py-3.5 rounded-full bg-white/5 border border-white/10 text-white font-medium text-lg hover:bg-white/10 transition-all backdrop-blur-sm">
+                            For Training
+                        </button>
                     </div>
                 </motion.div>
             </div>
 
-            {/* Scroll indicator */}
+            {/* Scroll Indicator */}
             <motion.div
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/30"
+                className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/20"
                 animate={{ y: [0, 10, 0] }}
                 transition={{ repeat: Infinity, duration: 2 }}
             >
-                <div className="w-6 h-10 border-2 border-current rounded-full flex justify-center pt-2">
-                    <div className="w-1 h-2 bg-current rounded-full" />
+                <div className="w-5 h-8 border-2 border-current rounded-full flex justify-center pt-2">
+                    <div className="w-0.5 h-1.5 bg-current rounded-full" />
                 </div>
             </motion.div>
-        </motion.section>
+        </section>
     );
 };
 

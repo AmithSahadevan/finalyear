@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cn } from "@/lib/utils";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import React, { useMemo, useRef, useCallback } from "react";
+import { useMemo, useRef } from "react";
+import React from "react";
 import * as THREE from "three";
 
 export const CanvasRevealEffect = ({
@@ -141,16 +142,14 @@ const DotMatrix: React.FC<DotMatrixProps> = ({
         }
         void main() {
             vec2 st = fragCoord.xy;
-            ${
-              center.includes("x")
-                ? "st.x -= abs(floor((mod(u_resolution.x, u_total_size) - u_dot_size) * 0.5));"
-                : ""
-            }
-            ${
-              center.includes("y")
-                ? "st.y -= abs(floor((mod(u_resolution.y, u_total_size) - u_dot_size) * 0.5));"
-                : ""
-            }
+            ${center.includes("x")
+          ? "st.x -= abs(floor((mod(u_resolution.x, u_total_size) - u_dot_size) * 0.5));"
+          : ""
+        }
+            ${center.includes("y")
+          ? "st.y -= abs(floor((mod(u_resolution.y, u_total_size) - u_dot_size) * 0.5));"
+          : ""
+        }
       float opacity = step(0.0, st.x);
       opacity *= step(0.0, st.y);
 
