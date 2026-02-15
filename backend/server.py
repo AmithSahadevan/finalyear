@@ -503,6 +503,9 @@ async def websocket_endpoint(websocket: WebSocket, candidate_id: str = None):
                         if nv_result.get('success'):
                             # Ensure we append a float, not a dict
                             score = nv_result.get('confidence_score', 0)
+                            # Ensure score is 0-100
+                            if score <= 1.0 and score > 0: score *= 100
+                            
                             if score is not None:
                                 non_verbal_scores.append(float(score))
                                 # print(f"DEBUG NV SCORE: {score}") # DEBUG

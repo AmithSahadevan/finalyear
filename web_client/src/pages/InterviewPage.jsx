@@ -1,7 +1,10 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/InterviewPage.css';
 
 const InterviewPage = () => {
+    const navigate = useNavigate();
+
     // ============ REFS ============
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
@@ -25,6 +28,7 @@ const InterviewPage = () => {
     const [aiMessage, setAiMessage] = useState('Hello! I am your AI Interview Coach. Click "Start Interview" to begin.');
     const [inputText, setInputText] = useState('');
     const [audioLevel, setAudioLevel] = useState(0); // For visualizing mic volume
+    const [showResults, setShowResults] = useState(false); // State to show results modal
 
     const handleSendMessage = () => {
         if (!inputText.trim() || !wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
@@ -117,6 +121,7 @@ const InterviewPage = () => {
 
                     case 'final_score':
                         setLiveScores(data.scores);
+                        setShowResults(true); // Show results when final scores arrive
                         break;
 
                     case 'status':
@@ -418,9 +423,9 @@ const InterviewPage = () => {
             // Let's assume the button wraps "End" functionality for now based on previous code.
             // But to fix "Listening", we might need to NOT close it if it's just a pause.
             // Let's stick to the previous behavior of closing for "Stop", but we'll ensure Camera stays.
-            setTimeout(() => {
-                wsRef.current.close();
-            }, 1000);
+            // Do not close immediately, wait for final score.
+            // The socket will be closed on unmount or when navigating away.
+            // setConnectionStatus('closing'); 
         }
     }, []);
 
@@ -538,6 +543,43 @@ const InterviewPage = () => {
                     </button>
                 </div>
             </div>
+
+            {/* Results Modal */}
+            {showResults && (
+                <div className="results-modal-overlay">
+                    <div className="results-modal-content">
+                        <div className="results-header">
+                            <h2>Interview Completed</h2>
+                            <p>Here is your performance summary</p>
+                        </div>
+                        
+                        <div className="score-grid">
+                            <div className="score-card">
+                                <span className="score-label">Non-Verbal</span>
+                                <span className="score-val">{Math.round(liveScores.non_verbal_score)}%</span>
+                            </div>
+                            <div className="score-card">
+                                <span className="score-label">Vocal Confidence</span>
+                                <span className="score-val">{Math.round(liveScores.vocal_score)}%</span>
+                            </div>
+                            <div className="score-card">
+                                <span className="score-label">Keyword Match</span>
+                                <span className="score-val">{Math.round(liveScores.keyword_score)}%</span>
+                            </div>
+                        </div>
+
+                        <div className="score-card final-score-card" style={{marginBottom: '25px'}}>
+                            <div className="score-label">Overall Score</div>
+                            <div className="score-val">{Math.round(liveScores.final_score)}%</div>
+                        </div>
+
+                        <div className="results-actions">
+                            <button className="secondary-btn" onClick={() => setShowResults(false)}>Close</button>
+                            <button className="primary-btn" onClick={() => navigate('/')}>Back to Home</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
