@@ -178,8 +178,15 @@ const InterviewPage = () => {
      * Runs every 500ms (2 FPS)
      */
     const startVideoFrameCapture = useCallback(() => {
+        // Clear any existing interval to prevent duplicates
+        if (videoRef.current._frameInterval) {
+            clearInterval(videoRef.current._frameInterval);
+        }
+
         const frameInterval = setInterval(() => {
-            if (!videoRef.current || !canvasRef.current || !cameraActive) return;
+            // Note: We check videoRef.current.srcObject instead of cameraActive state
+            // to avoid closure staleness issues in the interval callback
+            if (!videoRef.current || !canvasRef.current || !videoRef.current.srcObject) return;
 
             try {
                 const canvas = canvasRef.current;
@@ -189,7 +196,7 @@ const InterviewPage = () => {
                 ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
                 // Convert canvas to base64 JPEG (lower bandwidth than PNG)
-                const frameBase64 = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
+                const frameBase64 = canvas.toDataURL('image/jpeg', 0.5); // reduced quality for speed
 
                 // Extract just the base64 part
                 const base64String = frameBase64.split(',')[1];
@@ -211,7 +218,7 @@ const InterviewPage = () => {
 
         // Store interval ID for cleanup
         videoRef.current._frameInterval = frameInterval;
-    }, [cameraActive]);
+    }, []); // Removed cameraActive dependency to keep it stable
 
     /**
      * Initialize audio recording and streaming using AudioContext (WAV)
