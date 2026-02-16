@@ -1,7 +1,10 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/InterviewPage.css';
 
 const InterviewPage = () => {
+    const navigate = useNavigate();
+
     // ============ REFS ============
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
@@ -25,6 +28,7 @@ const InterviewPage = () => {
     const [aiMessage, setAiMessage] = useState('Hello! I am your AI Interview Coach. Click "Start Interview" to begin.');
     const [inputText, setInputText] = useState('');
     const [audioLevel, setAudioLevel] = useState(0); // For visualizing mic volume
+    const [showResults, setShowResults] = useState(false); // State to show results modal
 
     const handleSendMessage = () => {
         if (!inputText.trim() || !wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
@@ -90,14 +94,14 @@ const InterviewPage = () => {
                         break;
 
                     case 'transcript':
-                         if (data.text) {
+                        if (data.text) {
                             // Only update if text is meaningful
                             if (data.text.trim().length > 0) {
                                 setTranscript(data.text);
                             }
-                         }
-                         break;
-                    
+                        }
+                        break;
+
                     case 'text':
                         if (data.ai_text) {
                             setAiMessage(data.ai_text);
@@ -117,6 +121,7 @@ const InterviewPage = () => {
 
                     case 'final_score':
                         setLiveScores(data.scores);
+                        setShowResults(true); // Show results when final scores arrive
                         break;
 
                     case 'status':
@@ -178,8 +183,15 @@ const InterviewPage = () => {
      * Runs every 500ms (2 FPS)
      */
     const startVideoFrameCapture = useCallback(() => {
+        // Clear any existing interval to prevent duplicates
+        if (videoRef.current._frameInterval) {
+            clearInterval(videoRef.current._frameInterval);
+        }
+
         const frameInterval = setInterval(() => {
-            if (!videoRef.current || !canvasRef.current || !cameraActive) return;
+            // Note: We check videoRef.current.srcObject instead of cameraActive state
+            // to avoid closure staleness issues in the interval callback
+            if (!videoRef.current || !canvasRef.current || !videoRef.current.srcObject) return;
 
             try {
                 const canvas = canvasRef.current;
@@ -189,7 +201,7 @@ const InterviewPage = () => {
                 ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
                 // Convert canvas to base64 JPEG (lower bandwidth than PNG)
-                const frameBase64 = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
+                const frameBase64 = canvas.toDataURL('image/jpeg', 0.5); // reduced quality for speed
 
                 // Extract just the base64 part
                 const base64String = frameBase64.split(',')[1];
@@ -211,7 +223,7 @@ const InterviewPage = () => {
 
         // Store interval ID for cleanup
         videoRef.current._frameInterval = frameInterval;
-    }, [cameraActive]);
+    }, []); // Removed cameraActive dependency to keep it stable
 
     /**
      * Initialize audio recording and streaming using AudioContext (WAV)
@@ -219,7 +231,7 @@ const InterviewPage = () => {
     const startAudioCapture = useCallback(async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            
+
             // Close existing context if any
             if (audioContextRef.current) {
                 audioContextRef.current.close();
@@ -234,11 +246,11 @@ const InterviewPage = () => {
             console.log("Audio Sample Rate:", actualSampleRate);
 
             const source = context.createMediaStreamSource(stream);
-            
+
             // Use ScriptProcessor for raw PCM access
             // Buffer size 4096, 1 input channel, 1 output channel
             const processor = context.createScriptProcessor(4096, 1, 1);
-            
+
             source.connect(processor);
             processor.connect(context.destination);
 
@@ -249,7 +261,7 @@ const InterviewPage = () => {
             processor.onaudioprocess = (e) => {
                 const inputData = e.inputBuffer.getChannelData(0);
                 audioBuffer.push(...inputData);
-                
+
                 // Calculate simple volume for visualization (Average Amplitude)
                 let sum = 0;
                 for (let i = 0; i < inputData.length; i++) {
@@ -259,10 +271,10 @@ const InterviewPage = () => {
                 setAudioLevel(Math.min(100, avg * 500)); // Amplify for visibility
 
                 if (audioBuffer.length >= BUFFER_SIZE) {
-                     // console.log("Sending Audio Chunk:", audioBuffer.length); // DEBUG
+                    // console.log("Sending Audio Chunk:", audioBuffer.length); // DEBUG
                     sendAudioChunk(new Float32Array(audioBuffer), actualSampleRate);
                     // Keep overlap? No, clear mostly.
-                    audioBuffer = []; 
+                    audioBuffer = [];
                 }
             };
 
@@ -309,7 +321,7 @@ const InterviewPage = () => {
                     binary += String.fromCharCode(bytes[i]);
                 }
                 const base64Audio = btoa(binary);
-                
+
                 if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
                     wsRef.current.send(JSON.stringify({
                         type: 'audio_chunk',
@@ -318,7 +330,7 @@ const InterviewPage = () => {
                     }));
                 }
             };
-            
+
             // Store reference for cleanup (mocking MediaRecorder interface for compatibility)
             mediaRecorderRef.current = {
                 stop: () => {
@@ -385,10 +397,10 @@ const InterviewPage = () => {
         if (mediaRecorderRef.current) {
             if (mediaRecorderRef.current._interval) clearInterval(mediaRecorderRef.current._interval);
             if (mediaRecorderRef.current.state && mediaRecorderRef.current.state !== 'inactive') {
-                 mediaRecorderRef.current.stop();
+                mediaRecorderRef.current.stop();
             }
         }
-        
+
         // Close AudioContext if active
         if (audioContextRef.current) {
             audioContextRef.current.close().catch(e => console.error(e));
@@ -411,9 +423,9 @@ const InterviewPage = () => {
             // Let's assume the button wraps "End" functionality for now based on previous code.
             // But to fix "Listening", we might need to NOT close it if it's just a pause.
             // Let's stick to the previous behavior of closing for "Stop", but we'll ensure Camera stays.
-            setTimeout(() => {
-                wsRef.current.close();
-            }, 1000);
+            // Do not close immediately, wait for final score.
+            // The socket will be closed on unmount or when navigating away.
+            // setConnectionStatus('closing'); 
         }
     }, []);
 
@@ -464,11 +476,11 @@ const InterviewPage = () => {
                                 <div style={{ width: 50, height: 2, background: 'white' }}></div>
                             </div>
                             <div className="listening-indicator">
-                                <div className="bar" style={{height: `${10 + audioLevel}%`, transition: 'height 0.1s', animation: 'none'}}></div>
-                                <div className="bar" style={{height: `${10 + audioLevel * 1.5}%`, transition: 'height 0.1s', animation: 'none'}}></div>
-                                <div className="bar" style={{height: `${10 + audioLevel * 2}%`, transition: 'height 0.1s', animation: 'none'}}></div>
-                                <div className="bar" style={{height: `${10 + audioLevel * 1.5}%`, transition: 'height 0.1s', animation: 'none'}}></div>
-                                <div className="bar" style={{height: `${10 + audioLevel}%`, transition: 'height 0.1s', animation: 'none'}}></div>
+                                <div className="bar" style={{ height: `${10 + audioLevel}%`, transition: 'height 0.1s', animation: 'none' }}></div>
+                                <div className="bar" style={{ height: `${10 + audioLevel * 1.5}%`, transition: 'height 0.1s', animation: 'none' }}></div>
+                                <div className="bar" style={{ height: `${10 + audioLevel * 2}%`, transition: 'height 0.1s', animation: 'none' }}></div>
+                                <div className="bar" style={{ height: `${10 + audioLevel * 1.5}%`, transition: 'height 0.1s', animation: 'none' }}></div>
+                                <div className="bar" style={{ height: `${10 + audioLevel}%`, transition: 'height 0.1s', animation: 'none' }}></div>
                             </div>
                             <div style={{ marginTop: 20, color: '#888', fontSize: '0.9rem', textAlign: 'center', padding: '0 40px' }}>
                                 {aiMessage}
@@ -531,6 +543,43 @@ const InterviewPage = () => {
                     </button>
                 </div>
             </div>
+
+            {/* Results Modal */}
+            {showResults && (
+                <div className="results-modal-overlay">
+                    <div className="results-modal-content">
+                        <div className="results-header">
+                            <h2>Interview Completed</h2>
+                            <p>Here is your performance summary</p>
+                        </div>
+                        
+                        <div className="score-grid">
+                            <div className="score-card">
+                                <span className="score-label">Non-Verbal</span>
+                                <span className="score-val">{Math.round(liveScores.non_verbal_score)}%</span>
+                            </div>
+                            <div className="score-card">
+                                <span className="score-label">Vocal Confidence</span>
+                                <span className="score-val">{Math.round(liveScores.vocal_score)}%</span>
+                            </div>
+                            <div className="score-card">
+                                <span className="score-label">Keyword Match</span>
+                                <span className="score-val">{Math.round(liveScores.keyword_score)}%</span>
+                            </div>
+                        </div>
+
+                        <div className="score-card final-score-card" style={{marginBottom: '25px'}}>
+                            <div className="score-label">Overall Score</div>
+                            <div className="score-val">{Math.round(liveScores.final_score)}%</div>
+                        </div>
+
+                        <div className="results-actions">
+                            <button className="secondary-btn" onClick={() => setShowResults(false)}>Close</button>
+                            <button className="primary-btn" onClick={() => navigate('/')}>Back to Home</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
