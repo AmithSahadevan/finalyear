@@ -1,171 +1,173 @@
-# AI Interview Coaching System
+# 🎓 AI Interview Coaching System
 
-A comprehensive AI-powered interview coaching platform that conducts mock interviews, analyzes candidate performance in real-time using multi-modal AI agents, and generates detailed feedback reports.
+A comprehensive, multi-modal AI platform designed to conduct realistic technical interviews, analyze candidate performance in real-time, and provide actionable feedback.
 
-## 🚀 Project Overview
+The system uses a suite of specialized AI agents to evaluate candidates not just on *what* they say, but *how* they say it—analyzing verbal content, vocal delivery, and non-verbal cues simultaneously.
 
-The **AI Interview Coaching System** is designed to simulate realistic technical interviews. It interacts with candidates through voice and video, assesses their performance across multiple dimensions (verbal, non-verbal, vocal, and content), and provides actionable feedback to help them improve.
+---
 
-### Key Features
--   **Interactive AI Interviewer**: An AI avatar (or voice) that asks relevant technical questions based on the candidate's branch (CSE, ECE, Mechanical, etc.) or resume.
--   **Multi-Modal Analysis**:
-    -   **Verbal**: Analyzes the content of the answers for correctness and relevance.
-    -   **Non-Verbal**: Tracks facial expressions and emotions via video (e.g., confidence, happiness vs. nervousness).
-    -   **Vocal**: Analyzes speech patterns (confidence, pitch, tone) via audio signal processing.
--   **Real-time Scoring**: Orchestrates scores from all agents to produce a final holistic interview score.
--   **Automated Reporting**: Generates a PDF performance report and emails it to the candidate.
--   **Admin Dashboard**: Allows administrators to view sessions, manage candidates, and system settings.
+## 🚀 Key Features
 
-## 🛠️ Tech Stack
+-   **🤖 Interactive AI Interviewer**: A conversational agent (powered by Llama 3 via Groq) that conducts the interview, asks branch-specific or resume-based technical questions.
+-   **📹 Real-Time Video Analysis**: Tracks facial expressions and emotions (confidence, nervousness, happiness) using Computer Vision.
+-   **🎙️ Vocal Remediation**: Analyzes speech patterns, pitch, loudness, and stability to detect hesitation or anxiety.
+-   **📝 Smart Transcription**: Converts candidate speech to text for content accuracy scoring.
+-   **📄 Resume Integration**: Parses uploaded resumes to generate personalized questions tailored to the candidate's projects and skills.
+-   **📊 Live Feedback**: Provides immediate scoring feedback during the session.
+-   **⚡ Low Latency**: Uses WebSocket streaming for real-time audio/video processing.
+-   **🗣️ Neural TTS**: High-quality, local Text-to-Speech (Piper) for the AI interviewer's voice.
+-   **📈 Automated Reporting**: Generates comprehensive PDF reports and emails them to candidates post-interview.
 
-### Frontend (User & Admin Clients)
--   **Framework**: [React](https://react.dev/) (v18)
--   **Build Tool**: [Vite](https://vitejs.dev/)
--   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
--   **Icons**: [Lucide React](https://lucide.dev/)
--   **Animation**: [Framer Motion](https://www.framer.com/motion/)
--   **State Management**: React Hooks
+---
 
-### Backend (Server & API)
--   **Framework**: [FastAPI](https://fastapi.tiangolo.com/) (Python)
--   **Concurrency**: AsyncIO for handling real-time WebSocket connections (video/audio streaming).
--   **Database**: MongoDB (via [Motor](https://motor.readthedocs.io/) async driver).
+## 🏗️ Architecture & Technologies
 
-### AI & Machine Learning Agents
-The backend is composed of specialized agents:
+The project follows a modular client-server architecture with specialized agents handling distinct analysis tasks.
 
-1.  **Brain Agent (Orchestrator)**
-    -   **Tech**: [LangChain](https://www.langchain.com/), [Groq API](https://groq.com/) (Llama-3-70b).
-    -   **Role**: Manages the interview flow (Intro → Branch Selection → Q&A). Generates dynamic questions if not found in the static dataset.
+### **Backend (`/backend`)**
+Built with **FastAPI** for high-performance async processing.
 
-2.  **Verbal Agent (Content Analysis)**
-    -   **Tech**: `SpeechRecognition` (Google Web Speech API) for transcription, `LangChain` + `Groq` for semantic similarity scoring.
-    -   **Role**: Transcribes user audio to text and evaluates the accuracy of the answer against an "ideal" response.
+*   **Core Framework**: `FastAPI`, `Uvicorn`
+*   **Database**: `MongoDB` (using `Motor` driver for async operations)
+*   **Communication**: `WebSockets` for full-duplex real-time streams.
+*   **Data Processing**: `ThreadPoolExecutor` for non-blocking ML inference.
+*   **Agents**:
+    *   **🧠 Brain Agent** (`backend/brain_agent`): Orchestrates the interview flow. Uses **LangChain** + **Groq (Llama 3.3-70b)** for logic, question generation, and branch classification.
+    *   **🗣️ Verbal Agent** (`backend/verbal_agent`): Handles Speech-to-Text using **Google Web Speech API** (via `SpeechRecognition`) and scores answer content using semantic analysis.
+    *   **👀 Non-Verbal Agent** (`backend/non_verbal_agent`): Uses **DeepFace** and **OpenCV** to detect facial emotions and engagement levels from video frames.
+    *   **🔊 Vocal Agent** (`backend/vocal_agent`): Uses **Librosa** and **Numpy** to extract audio features (pitch, RMS energy/loudness, spectral stability) to assess vocal confidence.
+    *   **🗣️ TTS Agent** (`backend/tts_agent`): Uses **Piper TTS** (local ONNX runtime) for generating fast, natural-sounding AI speech.
+    *   **💯 Scoring Agent** (`backend/scoring_agent`): Aggregates weighted scores from all other agents into a final performance report.
 
-3.  **Keyword Scorer (Content Analysis)**
-    -   **Tech**: `LangChain` + `Groq`.
-    -   **Role**: Extracts technical keywords from the user's transcript and compares them against expected domain terminologies (e.g., "algorithm", "database" for CSE).
+### **Frontend Clients**
+Built with **React (Vite)** and **Tailwind CSS**.
 
-4.  **Non-Verbal Agent (Video Analysis)**
-    -   **Tech**: [DeepFace](https://github.com/serengil/deepface), `OpenCV`.
-    -   **Role**: Analyzes video frames for facial emotions (Happy, Neutral, Fearful, etc.) to compute a "confidence" score based on facial cues.
+1.  **Web Client (`/web_client`)**: The candidate-facing application.
+    *   Handles Webcam/Microphone access using standard web APIs.
+    *   Streams media chunks to the backend via WebSocket.
+    *   Renders the AI Avatar/Interface and real-time feedback charts.
+2.  **Admin Client (`/admin_client`)**:
+    *   Dashboard for interviewers/admins.
+    *   View candidate lists, session history, and detailed reports.
+    *   Uses chart libraries for data visualization.
+3.  **Website (`/website`)**:
+    *   Marketing/Landing page (TypeScript version).
+    *   Showcases project philosophy and features.
 
-5.  **Vocal Agent (Audio Analysis)**
-    -   **Tech**: [Librosa](https://librosa.org/), `SoundFile`.
-    -   **Role**: Analyzes audio signals for pitch, tone, and steadiness to determine vocal confidence.
-
-6.  **Report Generator**
-    -   **Tech**: `ReportLab` or similar PDF generation libraries.
-    -   **Role**: Compiles all scores and insights into a downloadable PDF.
+---
 
 ## 📂 Project Structure
 
-```
+```bash
 finalyear/
-├── admin_client/          # React Admin Dashboard
-│   ├── src/
-│   │   ├── pages/         # Dashboard, Sessions, Settings
-│   │   └── layouts/       # Application shells
-├── web_client/            # React Candidate Interface
-│   ├── src/
-│   │   ├── pages/         # Landing, Login, Interview Room
-│   │   └── styles/        # Specific component styles
-├── backend/               # Main FastAPI Server & Agents
-│   ├── agents/            # Utility for lazy loading ML models
-│   ├── brain_agent/       # Conversation logic (LLM)
-│   ├── verbal_agent/      # Transcription & Semantic Score
-│   ├── scoring_agent/     # Scoring Engine & Aggregation
-│   ├── non_verbal_agent/  # Video emotion analysis
-│   ├── vocal_agent/       # Audio signal analysis
-│   ├── tts_agent/         # Text-To-Speech generation
-│   ├── server.py          # FastAPI entry point
-│   ├── store.py           # Database interactions (MongoDB)
-│   ├── requirements.txt   # Python dependencies
-│   └── questions.json     # Static question bank
+├── backend/                # FastAPI Server & Python Agents
+│   ├── agents/             # Shared agent utilities (Lazy Loaders)
+│   ├── brain_agent/        # Logic & LLM Orchestrator
+│   ├── verbal_agent/       # STT & Content Scoring
+│   ├── non_verbal_agent/   # Video/Emotion Analysis
+│   ├── vocal_agent/        # Audio Feature Extraction
+│   ├── tts_agent/          # Piper TTS Engine & Models
+│   ├── server.py           # Main Entry Point
+│   ├── store.py            # MongoDB Database Wrapper
+│   └── requirements.txt    # Python Dependencies
+├── web_client/             # Candidate React App
+├── admin_client/           # Admin React App
+├── website/                # Landing Page
+└── README.md               # This file
 ```
 
-## 📊 Marking & Scoring System
+---
 
-The system calculates a **Final Score (out of 100)** based on a weighted algorithm:
+## ⚡ Deployment & Running Locally
 
-### 1. Accuracy & Content Score (55% weight)
-Measures *what* the candidate said.
--   **Semantic Accuracy (65%)**: How well the meaning of the user's answer matches the ideal answer (LLM-based).
--   **Keyword Coverage (35%)**: Presence of required technical terms for the specific job role/branch.
-    -   *(Calculated by `keyword_scorer.py`)*
+### 1. Prerequisites
+-   **Python 3.10+** (Recommended)
+-   **Node.js 16+** & **npm**
+-   **MongoDB** (Local or Atlas URIs)
+-   **FFmpeg** (Must be installed and added to system PATH for audio decoding)
 
-### 2. Presentation & Confidence Score (45% weight)
-Measures *how* the candidate said it.
--   **Vocal Confidence (55%)**: Based on voice steadiness, volume consistency, and lack of hesitation.
--   **Non-Verbal Confidence (45%)**: Based on facial expressions (e.g., maintaining a neutral/happy expression vs. fearful/sad).
+### 2. Environment Setup
+Create a `.env` file in the `backend/` directory with the following keys:
 
-*(Source: `backend/scoring_agent/engine.py`)*
-
-## 🔄 User Workflow
-
-1.  **Landing & Login**: User visits the web client, logs in, and optionally uploads a resume.
-2.  **Introduction**: User enters the interview room. The AI greets the user.
-3.  **Branch Selection**: User selects their domain (CSE, ECE, Civil, etc.) or the system detects it from the resume (future scope).
-4.  **Interview Phase**:
-    -   AI asks a question (TTS generates voice).
-    -   User answers (Video & Audio recorded).
-    -   **Real-time Processing**:
-        -   Audio -> Transcribed -> Keyword/Semantic analysis.
-        -   Video -> Emotion analysis.
-5.  **Conclusion**: After a set number of questions, the interview ends.
-6.  **Report**: The system calculates the final score, generates a PDF, and emails it to the user. Analysis is also saved to the Admin Dashboard.
-
-## ⚙️ Installation & Setup
-
-### Prerequisites
--   Python 3.9+
--   Node.js 16+
--   MongoDB (Running locally or Atlas URI)
--   Visual C++ Build Tools (required for some Python ML libraries)
-
-### 1. Backend Setup
-```bash
-cd backend
-python -m venv venv
-# Activate venv: venv\Scripts\activate (Windows) or source venv/bin/activate (Mac/Linux)
-pip install -r requirements.txt
-
-# Create a .env file containing:
-# MONGO_URI=mongodb://localhost:27017/
-# GROQ_API_KEY=your_groq_api_key_here
-# EMAIL_USER=your_email@gmail.com
-# EMAIL_PASSWORD=your_app_password
-
-python server.py
-# Server starts at http://localhost:8000
+```ini
+GROQ_API_KEY=your_groq_api_key_here
+MONGO_URI=mongodb://localhost:27017/ai_interview_system
+# Optional email settings for report delivery
+EMAIL_SENDER=your_email@gmail.com
+EMAIL_PASSWORD=your_app_password
 ```
 
-### 2. Frontend Setup (Web Client)
-```bash
-cd web_client
-npm install
-npm run dev
-# App starts at http://localhost:5173
-```
+### 3. Running the Backend
+1.  Navigate to the `backend` directory:
+    ```bash
+    cd backend
+    ```
+2.  Create and activate a virtual environment (optional but recommended):
+    ```bash
+    python -m venv venv
+    # Windows:
+    .\venv\Scripts\Activate
+    # Mac/Linux:
+    source venv/bin/activate
+    ```
+3.  Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+4.  Start the server:
+    ```bash
+    python server.py
+    ```
+    The server will start at `http://localhost:8000`. API docs available at `http://localhost:8000/docs`.
 
-### 3. Admin Panel Setup (Optional)
-```bash
-cd admin_client
-npm install
-npm run dev
-# App starts at http://localhost:5174 (typically)
-```
+### 4. Running the Frontend (Candidate)
+1.  Open a new terminal and navigate to `web_client`:
+    ```bash
+    cd web_client
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the development server:
+    ```bash
+    npm run dev
+    ```
+    The app usually runs at `http://localhost:5173`.
 
-## 🧩 Libraries & Their Uses
+### 5. Running the Admin Dashboard
+1.  Open a new terminal and navigate to `admin_client`:
+    ```bash
+    cd admin_client
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the development server:
+    ```bash
+    npm run dev
+    ```
+    The app usually runs at `http://localhost:5174`.
 
-| Library | Component | Purpose |
-| :--- | :--- | :--- |
-| **FastAPI** | Backend | High-performance API server. |
-| **LangChain** | Backend | Framework for LLM interactions (Brain & Scoring). |
-| **DeepFace** | Non-Verbal | Facial attribute analysis (Emotion detection). |
-| **Librosa** | Vocal | Audio analysis for music and speech. |
-| **Opencv-python** | Vision | Image processing for video frames. |
-| **SpeechRecognition** | Verbal | Wrapper for Google's Speech-to-Text API. |
-| **TailwindCSS** | Frontend | Utility-first CSS framework for rapid UI development. |
-| **Framer Motion** | Frontend | Animation library for smooth UI transitions. |
-| **Motor** | Database | Asynchronous MongoDB driver for Python. |
+---
+
+## 🔄 How It Works (The Flow)
+
+1.  **Registration**: Candidate signs up, uploading their resume. The backend parses the resume text for context.
+2.  **Initialization**: User enters the interview room. A WebSocket connection is opened (`ws://localhost:8000/ws/interview`).
+3.  **The Loop**:
+    *   **Audio Loop**: The frontend records audio chunks -> Backend decodes via FFmpeg -> `VocalAgent` checks loudness/pitch.
+    *   **Silence Detection**: When the user stops speaking (detected by `VocalAgent`), the buffered audio is sent to the `VerbalAgent` for transcription.
+    *   **Visual Loop**: Video frames are captured periodically -> `NonVerbalAgent` detects face/emotions.
+4.  **Response Generation**:
+    *   Transcribed text is sent to the `BrainAgent` (LLM).
+    *   The LLM generates a text response.
+    *   `TTSAgent` converts the response to audio.
+    *   Audio is streamed back to the frontend to be played.
+5.  **Conclusion**:
+    *   Session ends.
+    *   `ScoringAgent` calculates the final score.
+    *   Data is saved to MongoDB.
+
+---

@@ -354,6 +354,110 @@
                 "ideal_answer": "A diode is a two-terminal electronic component that conducts current primarily in one direction; it has low resistance in one direction, and high resistance in the other."
             }
         ],
+        "MBA": [
+            {
+                "id": "mba_1",
+                "text": "What is Strategic Management?",
+                "ideal_answer": "Strategic management is the process of setting goals, analyzing the competitive environment, assessing internal capabilities, and formulating and implementing strategies to achieve organizational objectives. It involves planning, monitoring, analysis, and assessment of all necessities an organization needs to meet its goals."
+            },
+            {
+                "id": "mba_2",
+                "text": "Explain the concept of Porter's Five Forces.",
+                "ideal_answer": "Porter's Five Forces is a framework for analyzing the competitive forces shaping an industry. The five forces are: threat of new entrants, bargaining power of suppliers, bargaining power of buyers, threat of substitute products, and rivalry among existing competitors. It helps businesses understand their competitive position and profitability potential."
+            },
+            {
+                "id": "mba_3",
+                "text": "What is SWOT Analysis?",
+                "ideal_answer": "SWOT Analysis is a strategic planning tool used to evaluate the Strengths, Weaknesses, Opportunities, and Threats of an organization. Strengths and Weaknesses are internal factors, while Opportunities and Threats are external. It helps businesses align their resources and capabilities with the competitive environment."
+            },
+            {
+                "id": "mba_4",
+                "text": "What is Working Capital Management?",
+                "ideal_answer": "Working Capital Management refers to managing the short-term assets and liabilities of a company to ensure it can meet its operational needs efficiently. It involves managing components like cash, accounts receivable, inventory, and accounts payable to maintain liquidity and operational efficiency."
+            },
+            {
+                "id": "mba_5",
+                "text": "What is the difference between Leadership and Management?",
+                "ideal_answer": "Management involves planning, organizing, and coordinating resources to achieve specific goals, focusing on systems and processes. Leadership involves inspiring and motivating people toward a vision, focusing on people and change. A good manager maintains stability while a good leader drives innovation and transformation."
+            },
+            {
+                "id": "mba_6",
+                "text": "What is Corporate Governance?",
+                "ideal_answer": "Corporate governance is the system of rules, practices, and processes by which a company is directed and controlled. It involves balancing the interests of stakeholders such as shareholders, management, customers, suppliers, and the community. Good corporate governance ensures transparency, accountability, and ethical conduct."
+            },
+            {
+                "id": "mba_7",
+                "text": "Explain the concept of Net Present Value (NPV).",
+                "ideal_answer": "Net Present Value (NPV) is a financial metric that calculates the difference between the present value of cash inflows and outflows over a period of time. A positive NPV indicates that the projected earnings from an investment exceed the anticipated costs, making it a financially viable project."
+            },
+            {
+                "id": "mba_8",
+                "text": "What is Supply Chain Management?",
+                "ideal_answer": "Supply Chain Management (SCM) is the coordination and management of all activities involved in sourcing, procurement, production, and delivery of products to the end customer. It aims to improve efficiency, reduce costs, and enhance customer satisfaction by streamlining the flow of goods, information, and finances."
+            },
+            {
+                "id": "mba_9",
+                "text": "What is Market Segmentation?",
+                "ideal_answer": "Market segmentation is the process of dividing a broad target market into smaller, more defined groups of consumers who share similar needs, characteristics, or behaviors. Common bases for segmentation include demographic, geographic, psychographic, and behavioral factors, enabling businesses to tailor their marketing strategies effectively."
+            },
+            {
+                "id": "mba_10",
+                "text": "What is Organizational Behavior (OB)?",
+                "ideal_answer": "Organizational Behavior is the study of how individuals and groups act within organizations. It examines the impact of human behavior on organizational performance by exploring topics like motivation, communication, leadership, group dynamics, and organizational culture, helping managers improve workplace effectiveness."
+            }
+        ],
+        "BBA": [
+            {
+                "id": "bba_1",
+                "text": "What is Business Administration?",
+                "ideal_answer": "Business Administration involves the management of business operations and decision-making. It encompasses areas like finance, marketing, human resources, and operations. Business administrators are responsible for planning, organizing, and directing resources to achieve organizational goals efficiently."
+            },
+            {
+                "id": "bba_2",
+                "text": "What is the difference between Accounting and Finance?",
+                "ideal_answer": "Accounting is the process of recording, classifying, and summarizing financial transactions to produce financial statements. Finance focuses on managing assets, liabilities, and investments to maximize the value of a business. Accounting provides historical data while finance uses that data for future planning and decision-making."
+            },
+            {
+                "id": "bba_3",
+                "text": "What is Marketing Mix?",
+                "ideal_answer": "The Marketing Mix, commonly known as the 4Ps, is a foundational business model consisting of Product, Price, Place, and Promotion. It is a set of tactical marketing tools that a company blends to produce the response it wants in the target market. Each element must be carefully balanced to achieve marketing objectives."
+            },
+            {
+                "id": "bba_4",
+                "text": "What is Entrepreneurship?",
+                "ideal_answer": "Entrepreneurship is the process of creating, launching, and running a new business venture while bearing the financial risks in the hope of profit. An entrepreneur identifies market opportunities, organizes resources, and takes calculated risks to build a business. It drives economic growth and innovation in society."
+            },
+            {
+                "id": "bba_5",
+                "text": "What is Human Resource Management (HRM)?",
+                "ideal_answer": "Human Resource Management is the strategic approach to managing an organization's most valuable asset — its people. It includes functions like recruitment, training and development, performance appraisal, compensation, and employee relations. HRM ensures the right people are in the right roles to achieve organizational goals."
+            },
+            {
+                "id": "bba_6",
+                "text": "What is the difference between B2B and B2C business models?",
+                "ideal_answer": "B2B (Business-to-Business) refers to transactions between businesses, such as a manufacturer selling to a wholesaler. B2C (Business-to-Consumer) refers to transactions between a business and individual end consumers. B2B typically involves longer sales cycles and larger order values, while B2C focuses on high volume and direct consumer engagement."
+            },
+            {
+                "id": "bba_7",
+                "text": "What is Break-Even Analysis?",
+                "ideal_answer": "Break-Even Analysis is a financial calculation that determines the point at which a business's total revenues equal its total costs, resulting in neither profit nor loss. It helps businesses understand the minimum sales volume needed to cover costs and is a crucial tool for pricing decisions and financial planning."
+            },
+            {
+                "id": "bba_8",
+                "text": "What is Consumer Behavior?",
+                "ideal_answer": "Consumer behavior is the study of how individuals, groups, and organizations select, buy, use, and dispose of goods and services to satisfy their needs and desires. It examines the influences of psychological, social, cultural, and personal factors on purchasing decisions, helping businesses develop effective marketing strategies."
+            },
+            {
+                "id": "bba_9",
+                "text": "What is Business Ethics?",
+                "ideal_answer": "Business ethics refers to the application of ethical principles and moral standards to business activities and decisions. It involves operating with honesty, fairness, and integrity in dealings with customers, employees, and stakeholders. Strong business ethics build trust, enhance reputation, and contribute to long-term organizational success."
+            },
+            {
+                "id": "bba_10",
+                "text": "What is the role of a Manager in an organization?",
+                "ideal_answer": "A manager is responsible for planning, organizing, leading, and controlling resources to achieve organizational objectives. They coordinate team efforts, make key decisions, resolve conflicts, and ensure performance standards are met. Effective managers motivate their teams, communicate clearly, and align individual goals with organizational strategy."
+            }
+        ],
         "ISE": [
             {
                 "id": "ise_1",
