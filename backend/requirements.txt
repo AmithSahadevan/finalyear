@@ -16,3 +16,4 @@ websockets
 langchain
 langchain-groq
 langchain-community
+SpeechRecognition
