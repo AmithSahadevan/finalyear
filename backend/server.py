@@ -33,23 +33,39 @@ logger = logging.getLogger(__name__)
 
 # ===== IMPORTS =====
 # Import Lazy Loader (created in agents/lazy_loader.py)
-from agents.lazy_loader import (
-    lazy_deepface,
-    lazy_librosa,
-    lazy_keybert,
-)
+try:
+    from agents.lazy_loader import (
+        lazy_deepface,
+        lazy_librosa,
+        lazy_keybert,
+    )
+except ImportError as e:
+    logger.error(f"Lazy Loader Import Failed: {e}")
+    # Basic fallbacks if lazy_loader fails
+    lazy_deepface = None
+    lazy_librosa = None
+    lazy_keybert = None
 
 # Project Imports
-from brain_agent.orchestrator import BrainAgent
-from verbal_agent.verbal_analyzer import VerbalAnalyzer
-from scoring_agent.engine import ScoringEngine as ScoreAgent
-from non_verbal_agent.video_analyzer import NonVerbalAgent
-from vocal_agent.vocal_analyzer import VocalAnalyzer
-from scoring_agent.keyword_scorer import KeywordScorer
-from report_generator import generate_pdf_report
-from email_service import send_email_with_report
-from store import InterviewStore
-from resume_parser import ResumeParser
+try:
+    from brain_agent.orchestrator import BrainAgent
+    from verbal_agent.verbal_analyzer import VerbalAnalyzer
+    from scoring_agent.engine import ScoringEngine as ScoreAgent
+    from non_verbal_agent.video_analyzer import NonVerbalAgent
+    from vocal_agent.vocal_analyzer import VocalAnalyzer
+    from scoring_agent.keyword_scorer import KeywordScorer
+    from report_generator import generate_pdf_report
+    from email_service import send_email_with_report
+    from store import InterviewStore
+    from resume_parser import ResumeParser
+except Exception as e:
+    logger.critical(f"CRITICAL IMPORT ERROR: {e}")
+    # Still allow app to start so we can see logs
+    BrainAgent = None
+    VerbalAnalyzer = None
+    NonVerbalAgent = None
+    VocalAnalyzer = None
+    KeywordScorer = None
 
 # ===== GLOBAL STATE =====
 store = None
