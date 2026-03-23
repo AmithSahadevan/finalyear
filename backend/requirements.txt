@@ -9,7 +9,7 @@ python-dotenv
 deepface
 opencv-python-headless
 mediapipe
-tf-keras
+tensorflow
 motor
 python-multipart
 websockets
