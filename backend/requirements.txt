@@ -13,3 +13,6 @@ tensorflow
 motor
 python-multipart
 websockets
+langchain
+langchain-groq
+langchain-community
