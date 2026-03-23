@@ -158,7 +158,8 @@ const DashboardPage = () => {
         if (!isSilent) setLoading(true);
         try {
             setError(null);
-            const res = await fetch('http://localhost:8000/admin/stats');
+            const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+            const res = await fetch(`${API_URL}/admin/stats`);
             if (!res.ok) throw new Error("Failed to connect to server");
             const data = await res.json();
             setStats(data);
@@ -227,7 +228,8 @@ const SessionsPage = () => {
     const fetchSessions = async (isSilent = false) => {
         if (!isSilent) setLoading(true);
         try {
-            const res = await fetch('http://localhost:8000/admin/sessions');
+            const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+            const res = await fetch(`${API_URL}/admin/sessions`);
             if (!res.ok) throw new Error("Failed to fetch sessions");
             const data = await res.json();
             setSessions(data);
@@ -316,7 +318,8 @@ const SettingsPage = () => {
     const [status, setStatus] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost:8000/admin/settings')
+        const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+        fetch(`${API_URL}/admin/settings`)
             .then(res => res.json())
             .then(data => {
                 setSystemPrompt(data.system_prompt || "");
@@ -332,7 +335,8 @@ const SettingsPage = () => {
     const handleSave = async () => {
         setSaving(true);
         setStatus(null);
-        try {
+        try {API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+            const res = await fetch(`${API_URL}/admin/settings`
             const res = await fetch('http://localhost:8000/admin/settings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

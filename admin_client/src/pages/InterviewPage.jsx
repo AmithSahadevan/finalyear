@@ -234,7 +234,8 @@ const InterviewPage = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8000/process_audio', {
+            const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+            const response = await fetch(`${API_URL}/process_audio`, {
                 method: 'POST',
                 body: formData,
             });
@@ -248,7 +249,8 @@ const InterviewPage = () => {
             ]);
 
             if (data.ai_audio_filename) {
-                const audioRes = await fetch(`http://localhost:8000/audio/${data.ai_audio_filename}`);
+                const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+                const audioRes = await fetch(`${API_URL}/audio/${data.ai_audio_filename}`);
                 const audioBlob = await audioRes.blob();
                 const url = URL.createObjectURL(audioBlob);
                 setAiAudioUrl(url);

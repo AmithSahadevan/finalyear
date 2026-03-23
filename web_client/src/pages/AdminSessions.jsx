@@ -8,7 +8,8 @@ const AdminSessions = () => {
     useEffect(() => {
         const fetchSessions = async () => {
             try {
-                const res = await fetch('http://localhost:8000/admin/sessions');
+                const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+                const res = await fetch(`${API_URL}/admin/sessions`);
                 const data = await res.json();
                 setSessions(data);
             } catch (err) {
@@ -22,7 +23,8 @@ const AdminSessions = () => {
 
     const playAudio = (filename) => {
         if (!filename) return;
-        const audio = new Audio(`http://localhost:8000/audio/${filename}`);
+        const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+        const audio = new Audio(`${API_URL}/audio/${filename}`);
         audio.play();
     };
 

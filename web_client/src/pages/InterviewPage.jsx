@@ -52,8 +52,13 @@ const InterviewPage = () => {
     const initializeWebSocket = useCallback(() => {
         try {
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            // Use environment variable for host, fallback to window.location.hostname for local dev if not set
+            const apiBase = import.meta.env.VITE_API_BASE_URL || 'localhost:8000';
+            // Extract hostname and port/path from the API URL if it's a full URL
+            const host = apiBase.replace(/^https?:\/\//, '').replace(/\/$/, '');
+            
             const candidateId = localStorage.getItem('candidate_id');
-            const wsUrl = `${protocol}//${window.location.hostname}:8000/ws/interview?candidate_id=${candidateId || ''}`;
+            const wsUrl = `${protocol}//${host}/ws/interview?candidate_id=${candidateId || ''}`;
 
             wsRef.current = new WebSocket(wsUrl);
 
